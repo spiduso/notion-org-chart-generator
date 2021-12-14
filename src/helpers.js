@@ -1,0 +1,134 @@
+exports.getCurrentTime = () => {
+    let localDate = new Date();
+    const offset = localDate.getTimezoneOffset();
+    localDate = new Date(localDate.getTime() - (offset * 60 * 1000));
+    return localDate.toISOString().replaceAll(':', '-').split('.')[0];
+};
+
+exports.getContent = (rows) => {
+    return `  
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load("current", {packages:['orgchart']});
+    google.charts.setOnLoadCallback(drawChart);  
+    function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Name');
+    data.addColumn('string', 'Manager');
+    data.addRows(${JSON.stringify(rows)});
+    // data.setRowProperty(3, 'style', 'width:1000px;background-color:#00FF00');
+    var options = {
+        'allowHtml':true,
+    };
+
+    var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+    }
+</script>
+<div id="chart_div"></div>`;
+};
+
+exports.getValuesFromDatabase = async (notionClient, id, propertiesArr) => {
+    const response = await notionClient.databases.query({
+        database_id: id,
+    });
+    const peopleArr = [];
+    for (const people of response.results) {
+        const person = { id: people.id };
+        for (const property of Object.keys(people.properties)) {
+            if (propertiesArr.includes(property)) {
+                person[property] = getInfo(people.properties[property]);
+            }
+        }
+        peopleArr.push(person);
+    }
+
+    return peopleArr;
+};
+
+exports.getRowsFromData = (data, name, leader, description) => {
+    const rows = [];
+
+    for (const person of data) {
+        const info = [];
+        if (person != null && person[name] != null) {
+            // name and description
+            let text;
+            if (description.length > 0) {
+                let desc = '';
+                for (const col of description) {
+                    desc += `<div>${person[col]}</div>`;
+                }
+                text = { v: person[name], f: `${person[name].replaceAll(' ', '&nbsp;')}${desc}` };
+            } else {
+                text = person[name];
+            }
+            info.push(text);
+
+            // leader ~ relation
+            if (person[leader][0] == null) { info.push(''); } else { info.push(person.Leader[0].name); }
+            rows.push(info);
+        }
+    }
+
+    return rows;
+};
+
+// Missing: Files and media, Advanced (Relation and basic Rollup done)
+function getInfo(data) {
+    let arr = [];
+    switch (data.type) {
+        case 'title':
+            if (data.title.length !== 0) { return data.title[0].plain_text; }
+            return;
+        case 'rich_text':
+            arr = [];
+            for (const text of data.rich_text) {
+                arr.push(text.text.content);
+            }
+            return arr;
+        case 'number':
+            return data.number;
+        case 'select':
+            return data.select.name;
+        case 'multi_select':
+            arr = [];
+            for (const select of data.multi_select) {
+                arr.push(select.name);
+            }
+            return arr;
+        case 'date':
+            return data.date;
+        case 'people':
+            arr = [];
+            for (const personData of data.people) {
+                const person = {};
+                person.name = personData.name;
+                person.email = personData.person.email;
+                arr.push(person);
+            }
+            return arr;
+        case 'checkbox':
+            return data.checkbox;
+        case 'url':
+            return data.url;
+        case 'email':
+            return data.email;
+        case 'phone_number':
+            return data.phone_number;
+        case 'relation':
+            arr = [];
+            for (const rel of data.relation) {
+                arr.push(rel);
+            }
+            return arr;
+        case 'rollup':
+            arr = [];
+            for (const rollup of data.rollup.array) {
+                arr.push({ [rollup.type]: getInfo(rollup) });
+            }
+            return arr;
+        default:
+            throw new Error('not implemented');
+    }
+}

@@ -1,0 +1,39 @@
+{
+  "title": "Notion Org Chart Generator",
+  "description": "Generate an organization chart from the Employee directory in Notion.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+      "queries": {
+        "integrationToken": "Integration token",
+        "type": "string",
+        "description": "Token of the integration to the Notion database. Token can be found in https://www.notion.so/my-integrations",
+        "editor": "textarea"
+    },
+    "databaseId": {
+        "title": "Database ID",
+        "type": "string",
+        "description": "Database ID can be found in the url of the Notion page.",
+        "editor": "textarea"
+    },
+    "relationName": {
+        "title": "Relation name",
+        "type": "string",
+        "description": "Name of the column in the Notion database with which relations in the orgchart will be made.",
+        "editor": "textarea"
+    },
+    "personName": {
+      "title": "Person name",
+      "type": "string",
+      "description": "Name of the column in the Notion database with name of the people.",
+      "editor": "textarea"
+  },
+  "personDescription": {
+    "title": "Person description",
+    "type": "array",
+    "description": "Name of the columns in the Notion database which will be added to the chart bellow the person name",
+    "editor": "stringList"
+}
+  },
+  "required": ["integrationToken", "databaseId", "relationName", "personName", "personDescription"]
+}

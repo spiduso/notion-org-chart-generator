@@ -1,0 +1,7 @@
+{
+	"name": "chart-puppeteer",
+	"version": "0.0",
+	"buildTag": "latest",
+	"env": null,
+	"template": "example_puppeteer_single_page"
+}
