@@ -57,7 +57,9 @@ exports.getRowsFromData = (data, name, leader, description) => {
             if (description.length > 0) {
                 let desc = '';
                 for (const col of description) {
-                    desc += `<div>${person[col]}</div>`;
+                    if (person[col] != null) {
+                        desc += `<div>${person[col]}</div>`;
+                    }
                 }
                 text = { v: person[name], f: `${person[name].replaceAll(' ', '&nbsp;')}${desc}` };
             } else {
@@ -66,11 +68,20 @@ exports.getRowsFromData = (data, name, leader, description) => {
             info.push(text);
 
             // leader ~ relation
-            if (person[leader][0] == null) { info.push(''); } else { info.push(person.Leader[0].name); }
+            if (Array.isArray(person[leader])) {
+                if (person[leader][0] == null) {
+                    info.push('');
+                } else if (person[leader][0].name != null) {
+                    info.push(person[leader][0].name);
+                } else {
+                    info.push(person[leader][0]);
+                }
+            } else {
+                info.push(person[leader]);
+            }
             rows.push(info);
         }
     }
-
     return rows;
 };
 
