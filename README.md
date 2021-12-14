@@ -33,11 +33,14 @@ Name of the column in the Notion database with which relations in the orgchart w
 
 ### Person name - ```personName```
 *Required - String*
+<hr>
 Name of the column in the Notion database with name of the people.
 
 ### Person description - ```personDescription```
+<hr>
 Name of the columns in the Notion database which will be added to the chart bellow the person name.
 *Optional - Array*
 
 ## Results
+<hr>
 Actor stores its result in the Storage with the name `org-chart-*time*`, where time is the date and time of actor run.
