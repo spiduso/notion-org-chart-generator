@@ -1,33 +1,43 @@
-# My beautiful actor
+# Notion Org Chart Generator
+Actor creates an org chart image based on Notion people directory.
 
-The `README.md` file contains a documentation what your actor does and how to use it,
-which is then displayed in the app or Apify Store. It's always a good
-idea to write a good `README.md`, in a few months not even you
-will remember all the details about the actor.
+## Cost of Usage
+Actor does not use any proxy. Actor use 1CU per 250 runs.
 
-You can use [Markdown](https://www.markdownguide.org/cheat-sheet)
-language for rich formatting.
+## Tutorial
+1) First of all you need a Notion page with a full page database.
+For this tutorial, we will use mockup data located in this link:
+```
+https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a
+```
+2) On this page - https://www.notion.so/my-integrations - create a new integration and choose correct asscociated workspace, which corresponds to the database.
+3) Go back to the Notion database page and click on `Share`, then `Invite` and under `Select an integration` choose the integration you created in the previous step. Give the integration permission `Can edit`.
+4) Now you are all set up! In https://console.apify.com/ create an actor and enter input viz section bellow.
+5) Image of the orgchart is stored in `Storage` with the name `org-chart-*time*`, where time is the date and time of actor run.
 
-## Documentation reference
+## Input
+### Integration token - ```integrationToken```
+*Required - String*
+<hr>
+Token of the integration to the Notion database. Token can be found in https://www.notion.so/my-integrations. Token starts with 'secret_'.
 
-- [Apify SDK](https://sdk.apify.com/)
-- [Apify Actor documentation](https://docs.apify.com/actor)
-- [Apify CLI](https://docs.apify.com/cli)
+### Database ID - ```databaseId```
+*Required - String*
+<hr>
+Database ID can be found in the url of the Notion page. For example, for https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a, the database ID is '8b374794e9fc490fb0ea98619eb7796a'.
 
-## Writing a README
+### Relation name - ```relationName```
+*Required - String*
+<hr>
+Name of the column in the Notion database with which relations in the orgchart will be made. Column can be type of Person or Text.
 
-See our tutorial on [writing READMEs for your actors](https://help.apify.com/en/articles/2912548-how-to-write-great-readme-for-your-actors) if you need more inspiration.
+### Person name - ```personName```
+*Required - String*
+Name of the column in the Notion database with name of the people.
 
-### Table of contents
+### Person description - ```personDescription```
+Name of the columns in the Notion database which will be added to the chart bellow the person name.
+*Optional - Array*
 
-If your README requires a table of contents, use the template below and make sure to keep the `<!-- toc start -->` and `<!-- toc end -->` markers.
-
-<!-- toc start -->
-- Introduction
-- Use Cases
-  - Case 1
-  - Case 2
-- Input
-- Output
-- Miscellaneous
- <!-- toc end -->
+## Results
+Actor stores its result in the Storage with the name `org-chart-*time*`, where time is the date and time of actor run.
