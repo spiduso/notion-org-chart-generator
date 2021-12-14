@@ -4,8 +4,8 @@
   "type": "object",
   "schemaVersion": 1,
   "properties": {
-      "queries": {
-        "integrationToken": "Integration token",
+      "integrationToken": {
+        "title": "Integration token",
         "type": "string",
         "description": "Token of the integration to the Notion database. Token can be found in https://www.notion.so/my-integrations",
         "editor": "textarea"
