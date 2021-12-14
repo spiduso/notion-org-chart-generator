@@ -13,7 +13,7 @@ https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a
 2) On this page - https://www.notion.so/my-integrations - create a new integration and choose correct asscociated workspace, which corresponds to the database.
 3) Go back to the Notion database page and click on `Share`, then `Invite` and under `Select an integration` choose the integration you created in the previous step. Give the integration permission `Can edit`.
 4) Now you are all set up! In https://console.apify.com/ create an actor and enter input viz section bellow.
-5) Image of the orgchart is stored in `Storage` with the name `org-chart-*time*`, where time is the date and time of actor run.
+5) Image of the orgchart is stored in the default key-value storage.
 
 ## Input
 <hr>
@@ -44,4 +44,4 @@ Name of the columns in the Notion database which will be added to the chart bell
 <hr>
 
 ## Results
-Actor stores its result in the Storage with the name `org-chart-*time*`, where time is the date and time of actor run.
+Actor stores its result in the default key-value storage with the name `org-chart`, where time is the date and time of actor run.

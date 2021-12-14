@@ -1,10 +1,3 @@
-exports.getCurrentTime = () => {
-    let localDate = new Date();
-    const offset = localDate.getTimezoneOffset();
-    localDate = new Date(localDate.getTime() - (offset * 60 * 1000));
-    return localDate.toISOString().replaceAll(':', '-').split('.')[0];
-};
-
 exports.getContent = (rows) => {
     return `  
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
