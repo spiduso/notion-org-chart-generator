@@ -16,31 +16,32 @@ https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a
 5) Image of the orgchart is stored in `Storage` with the name `org-chart-*time*`, where time is the date and time of actor run.
 
 ## Input
+<hr>
+
 ### Integration token - ```integrationToken```
 *Required - String*
-<hr>
 Token of the integration to the Notion database. Token can be found in https://www.notion.so/my-integrations. Token starts with 'secret_'.
+<hr>
 
 ### Database ID - ```databaseId```
 *Required - String*
-<hr>
 Database ID can be found in the url of the Notion page. For example, for https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a, the database ID is '8b374794e9fc490fb0ea98619eb7796a'.
+<hr>
 
 ### Relation name - ```relationName```
-*Required - String*
-<hr>
+*Required - String*<br>
 Name of the column in the Notion database with which relations in the orgchart will be made. Column can be type of Person or Text.
+<hr>
 
 ### Person name - ```personName```
-*Required - String*
-<hr>
+*Required - String* <br>
 Name of the column in the Notion database with name of the people.
+<hr>
 
 ### Person description - ```personDescription```
-<hr>
-Name of the columns in the Notion database which will be added to the chart bellow the person name.
 *Optional - Array*
+Name of the columns in the Notion database which will be added to the chart bellow the person name.
+<hr>
 
 ## Results
-<hr>
 Actor stores its result in the Storage with the name `org-chart-*time*`, where time is the date and time of actor run.
