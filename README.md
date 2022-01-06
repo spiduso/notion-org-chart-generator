@@ -11,7 +11,7 @@ For this tutorial, we will use mockup data located in this link:
 https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a
 ```
 2) On this page - https://www.notion.so/my-integrations - create a new integration and choose correct asscociated workspace, which corresponds to the database.
-3) Go back to the Notion database page and click on `Share`, then `Invite` and under `Select an integration` choose the integration you created in the previous step. Give the integration permission `Can edit`.
+3) Go back to the Notion database page and click on `Share`, then `Invite` and under `Select an integration` choose the integration you created in the previous step. Give the integration permission `Can view`.
 4) Now you are all set up! In https://console.apify.com/ create an actor and enter input viz section bellow.
 5) Image of the orgchart is stored in the default key-value storage.
 
