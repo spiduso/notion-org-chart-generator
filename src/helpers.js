@@ -39,6 +39,15 @@ exports.getValuesFromDatabase = async (notionClient, id, propertiesArr) => {
     return peopleArr;
 };
 
+exports.getDatabaseId = (name) => {
+    if (name.includes('/')) {
+        const splitByDash = name.split('/');
+        return splitByDash[splitByDash.length - 1].split('?')[0];
+    }
+
+    return name;
+};
+
 exports.getRowsFromData = (data, name, leader, description) => {
     const rows = [];
 

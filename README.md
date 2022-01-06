@@ -23,9 +23,9 @@ https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a
 Token of the integration to the Notion database. Token can be found in https://www.notion.so/my-integrations. Token starts with 'secret_'.
 <hr>
 
-### Database ID - ```databaseId```
+### Database - ```database```
 *Required - String*
-Database ID can be found in the url of the Notion page. For example, for https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a, the database ID is '8b374794e9fc490fb0ea98619eb7796a'.
+Notion URL to the database or Database ID can be found in the url of the Notion page. For example, for https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a, or just '8b374794e9fc490fb0ea98619eb7796a'.
 <hr>
 
 ### Relation name - ```relationName```

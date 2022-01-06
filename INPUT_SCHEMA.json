@@ -10,10 +10,10 @@
         "description": "Token of the integration to the Notion database. Token can be found in https://www.notion.so/my-integrations. Token starts with 'secret_'",
         "editor": "textarea"
     },
-    "databaseId": {
-        "title": "Database ID",
+    "database": {
+        "title": "Database",
         "type": "string",
-        "description": "Database ID can be found in the url of the Notion page.",
+        "description": "Notion URL to the database or Database ID can be found in the url of the Notion page.",
         "editor": "textarea",
         "prefill": "8b374794e9fc490fb0ea98619eb7796a"
     },
@@ -39,5 +39,5 @@
     "prefill": ["Role", "Email"]
 }
   },
-  "required": ["integrationToken", "databaseId", "relationName", "personName"]
+  "required": ["integrationToken", "database", "relationName", "personName"]
 }

@@ -3,18 +3,20 @@ const Notion = require('@notionhq/client');
 
 const { Client } = Notion;
 const { utils: { log } } = Apify;
-const { getContent, getValuesFromDatabase, getRowsFromData } = require('./helpers');
+const { getContent, getValuesFromDatabase, getRowsFromData, getDatabaseId } = require('./helpers');
 
 Apify.main(async () => {
     log.info('[CHART]: Getting input.');
     const input = await Apify.getInput();
     const {
         integrationToken,
-        databaseId,
+        database,
         relationName,
         personName,
         personDescription,
     } = input;
+
+    const databaseId = getDatabaseId(database);
 
     log.info('[CHART]: Getting data from notion database.');
     const notion = new Client({ auth: integrationToken });
