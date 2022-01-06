@@ -51,7 +51,11 @@ exports.getRowsFromData = (data, name, leader, description) => {
                 let desc = '';
                 for (const col of description) {
                     if (person[col] != null) {
-                        desc += `<div>${person[col]}</div>`;
+                        if (typeof person[col] === 'object') {
+                            desc += `<div>${getDataFromObject(person[col])}</div>`;
+                        } else {
+                            desc += `<div>${person[col]}</div>`;
+                        }
                     }
                 }
                 text = { v: person[name], f: `${person[name].replaceAll(' ', '&nbsp;')}${desc}` };
@@ -77,6 +81,31 @@ exports.getRowsFromData = (data, name, leader, description) => {
     }
     return rows;
 };
+
+function getDataFromObject(obj) {
+    let result = '';
+    if (Array.isArray(obj)) {
+        for (const el of obj) {
+            if (typeof el === 'object') {
+                result += getDataFromObject(el);
+            } else {
+                result += el;
+            }
+            result += ', ';
+        }
+    } else if (typeof obj === 'object') { // dictionary
+        for (const value of Object.values(obj)) {
+            if (typeof value === 'object') {
+                result += getDataFromObject(value);
+            } else {
+                result += value;
+            }
+            result += ', ';
+        }
+    }
+
+    return result.substring(0, result.length - 2);
+}
 
 // Missing: Files and media, Advanced (Relation and basic Rollup done)
 function getInfo(data) {
@@ -107,7 +136,15 @@ function getInfo(data) {
             arr = [];
             for (const personData of data.people) {
                 const person = {};
-                person.name = personData.name;
+                const { email, name } = personData;
+
+                if (name) {
+                    person.name = personData.name;
+                }
+
+                if (email) {
+                    person.name = personData.name;
+                }
                 person.email = personData.person.email;
                 arr.push(person);
             }
