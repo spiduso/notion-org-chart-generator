@@ -28,6 +28,12 @@ exports.getValuesFromDatabase = async (notionClient, id, propertiesArr) => {
         database_id: id,
     });
     const peopleArr = [];
+    if (!(propertiesArr[0] in response.results[0].properties)) {
+        throw new Error(`'${propertiesArr[0]}' column is not in the database and personName is required!`);
+    }
+    if (!(propertiesArr[1] in response.results[0].properties)) {
+        throw new Error(`'${propertiesArr[1]}' column is not in the database and relationName is required!`);
+    }
     for (const people of response.results) {
         const person = { id: people.id };
         for (const property of Object.keys(people.properties)) {
@@ -136,7 +142,7 @@ exports.getRowsFromData = (data, name, leader, description) => {
         if (person != null && person[name] != null) {
             // name and description
             let text;
-            if (description.length > 0) {
+            if (description && description.length > 0) {
                 let desc = '';
                 for (const col of description) {
                     if (person[col] != null) {
