@@ -3,7 +3,7 @@ const Notion = require('@notionhq/client');
 
 const { Client } = Notion;
 const { utils: { log } } = Apify;
-const { getContent, getValuesFromDatabase, getRowsFromData, getDatabaseId } = require('./helpers');
+const { getContent, getValuesFromDatabase, getRowsFromData, getDatabaseId, checkNamesandLeaders } = require('./helpers');
 
 Apify.main(async () => {
     log.info('[CHART]: Getting input.');
@@ -21,9 +21,9 @@ Apify.main(async () => {
     log.info('[CHART]: Getting data from notion database.');
     const notion = new Client({ auth: integrationToken });
     const columnsToGet = relationName.concat(personName, personDescription);
-    const data = await getValuesFromDatabase(notion, databaseId, columnsToGet);
+    let data = await getValuesFromDatabase(notion, databaseId, columnsToGet);
+    data = checkNamesandLeaders(data, personName, relationName);
     const readyRows = getRowsFromData(data, personName, relationName, personDescription);
-
     log.info('[CHART]: Opening Puppeteer browser.');
     const browser = await Apify.launchPuppeteer();
     const page = await browser.newPage();

@@ -1,3 +1,5 @@
+const levenshtein = require('fast-levenshtein');
+
 exports.getContent = (rows) => {
     return `  
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -47,6 +49,84 @@ exports.getDatabaseId = (name) => {
 
     return name;
 };
+
+exports.checkNamesandLeaders = (data, personName, relationName) => {
+    // get names from name column
+    const names = [];
+    for (const person of data) {
+        names.push(person[personName]);
+    }
+
+    // check if relationName is in name column
+    const notMatchedNames = [];
+    const nameDict = {};
+    for (const person of data) {
+        if (person[relationName].length === 0) {
+            // skip
+        } else if (person[relationName][0] in nameDict) {
+            person[relationName] = nameDict[person[relationName][0]];
+        } else if (!notMatchedNames.includes(person[relationName][0]) && !names.includes(person[relationName])) {
+            const nameToCheck = person[relationName][0];
+            const name = tryToMatch(nameToCheck, names);
+            if (name == null) {
+                notMatchedNames.push(nameToCheck);
+            } else {
+                nameDict[nameToCheck] = name;
+                person[relationName] = name;
+            }
+        }
+    }
+
+    return data;
+};
+
+function tryToMatch(name, names) {
+    // remove diacritics
+    const normalizedNotMatched = normalizeString(name);
+    for (const personName of names) {
+        // check names with normalize name
+        if (normalizeString(personName) === normalizedNotMatched || levenshtein.get(name, personName) <= 2) {
+            return personName;
+        }
+    }
+
+    return null;
+}
+
+function normalizeString(str) {
+    // remove diacritics
+    let result = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    // remove nicknames in quotation marks
+    let fstIndex = result.indexOf('"');
+    if (fstIndex > 0 && result.length > fstIndex + 1) {
+        const sndIndex = result.substring(fstIndex + 1).indexOf('"');
+        if (sndIndex > 0) {
+            let space = ' ';
+            if (result.substring(0, fstIndex).includes(' ') || result.substring(fstIndex + sndIndex + 2, result.length).includes(' ')) {
+                space = '';
+            }
+            result = result.substring(0, fstIndex) + space + result.substring(fstIndex + sndIndex + 2, result.length);
+        }
+    }
+
+    fstIndex = result.indexOf("'");
+    if (fstIndex > 0 && result.length > fstIndex + 1) {
+        const sndIndex = result.substring(fstIndex + 1).indexOf("'");
+        if (sndIndex > 0) {
+            let space = ' ';
+            if (result.substring(0, fstIndex).includes(' ') || result.substring(fstIndex + sndIndex + 2, result.length).includes(' ')) {
+                space = '';
+            }
+            result = result.substring(0, fstIndex) + space + result.substring(fstIndex + sndIndex + 2, result.length);
+        }
+    }
+
+    // remove multiline spaces
+    result = result.replace(/\s\s+/g, ' ');
+
+    return result.replace(/[\u0021-\u002f\u003a-\u0040\u005b-\u0060\u007b-\u007e]/g, '');
+}
 
 exports.getRowsFromData = (data, name, leader, description) => {
     const rows = [];
