@@ -81,10 +81,10 @@ exports.checkNamesandLeaders = (data, personName, relationName) => {
                 }
                 // if name already mathed before
                 if (person[relationName][i] in nameDict) {
-                    person[relationName] = nameDict[person[relationName][0]];
-                } else if (!notMatchedNames.includes(person[relationName][0]) && !names.includes(person[relationName])) {
+                    person[relationName][i] = nameDict[person[relationName][i]];
+                } else if (!notMatchedNames.includes(person[relationName][i]) && !names.includes(person[relationName][i])) {
                     // if name is not unmatchable and name is not in name arr, then try heurestics
-                    const nameToCheck = person[relationName][0];
+                    const nameToCheck = person[relationName][i];
                     const name = tryToMatch(nameToCheck, names);
 
                     if (name == null) {
@@ -185,12 +185,18 @@ exports.getRowsFromData = (data, name, leader, description) => {
 
             // leader ~ relation
             if (Array.isArray(person[leader])) {
-                if (person[leader][0] == null) {
+                if (person[leader].length === 0) {
                     info.push('');
-                } else if (person[leader][0].name != null) {
-                    info.push(person[leader][0].name);
                 } else {
-                    info.push(person[leader][0]);
+                    let str = '';
+                    for (const lead of person[leader].sort()) {
+                        if (lead.name != null) {
+                            str += `, ${lead.name}`;
+                        } else {
+                            str += `, ${lead}`;
+                        }
+                    }
+                    info.push(str.substring(2));
                 }
             } else {
                 info.push(person[leader]);
@@ -198,6 +204,7 @@ exports.getRowsFromData = (data, name, leader, description) => {
             rows.push(info);
         }
     }
+
     return rows;
 };
 
