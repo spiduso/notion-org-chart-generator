@@ -60,25 +60,42 @@ exports.checkNamesandLeaders = (data, personName, relationName) => {
     // get names from name column
     const names = [];
     for (const person of data) {
-        names.push(person[personName]);
+        if (person[personName] == null || person[personName].trim() === '') {
+            delete person[personName];
+        } else {
+            names.push(person[personName]);
+        }
     }
 
     // check if relationName is in name column
     const notMatchedNames = [];
     const nameDict = {};
     for (const person of data) {
-        if (person[relationName].length === 0) {
-            // skip
-        } else if (person[relationName][0] in nameDict) {
-            person[relationName] = nameDict[person[relationName][0]];
-        } else if (!notMatchedNames.includes(person[relationName][0]) && !names.includes(person[relationName])) {
-            const nameToCheck = person[relationName][0];
-            const name = tryToMatch(nameToCheck, names);
-            if (name == null) {
-                notMatchedNames.push(nameToCheck);
-            } else {
-                nameDict[nameToCheck] = name;
-                person[relationName] = name;
+        // check rows with leaders only
+        if (person[relationName].length !== 0) {
+            // check every leader
+            for (let i = 0; i < person[relationName].length; i++) {
+                // if person[relationName][i] is Person object
+                if (typeof person[relationName][i] === 'object') {
+                    person[relationName][i] = person[relationName][i].name;
+                }
+                // if name already mathed before
+                if (person[relationName][i] in nameDict) {
+                    person[relationName] = nameDict[person[relationName][0]];
+                } else if (!notMatchedNames.includes(person[relationName][0]) && !names.includes(person[relationName])) {
+                    // if name is not unmatchable and name is not in name arr, then try heurestics
+                    const nameToCheck = person[relationName][0];
+                    const name = tryToMatch(nameToCheck, names);
+
+                    if (name == null) {
+                        // not matched, add to unmatchable
+                        notMatchedNames.push(nameToCheck);
+                    } else {
+                        // matched, add to matchable and update
+                        nameDict[nameToCheck] = name;
+                        person[relationName] = name;
+                    }
+                }
             }
         }
     }
@@ -100,7 +117,12 @@ function tryToMatch(name, names) {
 }
 
 function normalizeString(str) {
-    // remove diacritics
+    /*
+        TODO: NOT PERFECT !!!
+        Does not work for at least: ł,ё,й,ẚ,đ,æ,ø,ẚ
+        Can be targeted manually if needed
+    */
+    // normalize and remove combining diacrtical marks
     let result = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
     // remove nicknames in quotation marks
@@ -128,9 +150,11 @@ function normalizeString(str) {
         }
     }
 
-    // remove multiline spaces
+    // replace multispace with single
     result = result.replace(/\s\s+/g, ' ');
 
+    // removes non-word-digit-whitespace-controlcode letters from ASCII
+    // TODO: If needed remove whitespaces too (\t\n\r...)
     return result.replace(/[\u0021-\u002f\u003a-\u0040\u005b-\u0060\u007b-\u007e]/g, '');
 }
 
@@ -153,7 +177,7 @@ exports.getRowsFromData = (data, name, leader, description) => {
                         }
                     }
                 }
-                text = { v: person[name], f: `${person[name].replaceAll(' ', '&nbsp;')}${desc}` };
+                text = { v: person[name], f: `${person[name]}${desc}` };
             } else {
                 text = person[name];
             }
