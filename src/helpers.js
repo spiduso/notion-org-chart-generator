@@ -59,9 +59,10 @@ exports.getDatabaseId = (name) => {
 exports.checkNamesandLeaders = (data, personName, relationName) => {
     // get names from name column
     const names = [];
-    for (const person of data) {
-        if (person[personName] == null || person[personName].trim() === '') {
-            delete person[personName];
+    for (let i = 0; i < data.length; i++) {
+        const person = data[i];
+        if (!(personName in person) || person[personName] == null || person[personName].trim() === '') {
+            data.splice(i, 1);
         } else {
             names.push(person[personName]);
         }

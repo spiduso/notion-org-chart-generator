@@ -4,7 +4,7 @@ const Notion = require('@notionhq/client');
 const { Client } = Notion;
 const { utils: { log } } = Apify;
 const { getContent, getValuesFromDatabase, getRowsFromData, getDatabaseId, checkNamesandLeaders } = require('./helpers');
-
+const { createContentFromTemplate } = require('./chart-template');
 Apify.main(async () => {
     log.info('[CHART]: Getting input.');
     const input = await Apify.getInput();
@@ -14,6 +14,7 @@ Apify.main(async () => {
         relationName,
         personName,
         personDescription,
+        typeOfChart
     } = input;
 
     const databaseId = getDatabaseId(database);
@@ -28,20 +29,35 @@ Apify.main(async () => {
 
     let data = await getValuesFromDatabase(notion, databaseId, columnsToGet);
     data = checkNamesandLeaders(data, personName, relationName);
+    let content = '';
+    const viewPort = {
+        height: 1
+    };
+    if (typeOfChart == null || typeOfChart == 'googleCharts') {
+        const readyRows = getRowsFromData(data, personName, relationName, personDescription);
+        content = getContent(readyRows);
+        viewPort.deviceScaleFactor = 2;
+        viewPort.width = 1;
+    } else if (typeOfChart == 'ownUnformatted') {
+        content = createContentFromTemplate(data, personName, relationName);
+        viewPort.deviceScaleFactor = 3;
+    } else {
+        throw new Error('Type of chart is not supported');
+    }
 
-    const readyRows = getRowsFromData(data, personName, relationName, personDescription);
     log.info('[CHART]: Opening Puppeteer browser.');
     const browser = await Apify.launchPuppeteer();
     const page = await browser.newPage();
 
     log.info('[CHART]: Setting google charts content.');
-    await page.setContent(getContent(readyRows), { waitUntil: 'networkidle2' });
-    await page.setViewport({
-        height: 1,
-        width: 1,
-        deviceScaleFactor: 2,
-    });
-
+    await page.setContent(content, { waitUntil: 'networkidle2' });
+    if (typeOfChart == 'ownUnformatted') {
+        const width = await page.evaluate(() => {
+            return document.getElementsByClassName('content')[0].offsetWidth;
+        });
+        viewPort.width = width + 50;
+    }
+    await page.setViewport(viewPort);
     log.info('[CHART]: Taking a screenshot.');
     const screenshot = await page.screenshot({ fullPage: true, omitBackground: true });
 

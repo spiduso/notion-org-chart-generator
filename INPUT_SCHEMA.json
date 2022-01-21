@@ -4,25 +4,18 @@
   "type": "object",
   "schemaVersion": 1,
   "properties": {
-      "integrationToken": {
-        "title": "Integration token",
-        "type": "string",
-        "description": "Token of the integration to the Notion database. Token can be found in https://www.notion.so/my-integrations. Token starts with 'secret_'",
-        "editor": "textarea"
+    "integrationToken": {
+      "title": "Integration token",
+      "type": "string",
+      "description": "Token of the integration to the Notion database. Token can be found in https://www.notion.so/my-integrations. Token starts with 'secret_'",
+      "editor": "textarea"
     },
     "database": {
-        "title": "Database",
-        "type": "string",
-        "description": "Notion URL to the database or Database ID can be found in the url of the Notion page.",
-        "editor": "textarea",
-        "prefill": "8b374794e9fc490fb0ea98619eb7796a"
-    },
-    "relationName": {
-        "title": "Relation name",
-        "type": "string",
-        "description": "Name of the column in the Notion database with which relations in the orgchart will be made.",
-        "editor": "textarea",
-        "prefill": "Leader"
+      "title": "Database",
+      "type": "string",
+      "description": "Notion URL to the database or Database ID can be found in the url of the Notion page.",
+      "editor": "textarea",
+      "prefill": "8b374794e9fc490fb0ea98619eb7796a"
     },
     "personName": {
       "title": "Person name",
@@ -30,14 +23,38 @@
       "description": "Name of the column in the Notion database with name of the people.",
       "editor": "textarea",
       "prefill": "Name"
+    },
+    "relationName": {
+      "title": "Relation name",
+      "type": "string",
+      "description": "Name of the column in the Notion database with which relations in the orgchart will be made.",
+      "editor": "textarea",
+      "prefill": "Leader"
+    },
+    "personDescription": {
+      "title": "Person description",
+      "type": "array",
+      "description": "Name of the columns in the Notion database which will be added to the chart bellow the person name",
+      "editor": "stringList",
+      "prefill": [
+        "Role",
+        "Email"
+      ]
+    },
+    "typeOfChart": {
+      "title": "Type of chart",
+      "type": "string",
+      "description": "Choose type of charts: Google charts - chart can be too wide for many people, Unformatted Nested List - simple without formatting",
+      "editor": "select",
+      "default": "googleCharts",
+      "enum": ["googleCharts", "ownUnformatted"],
+      "enumTitles": ["Google Charts", "Unformatted Nested List"]
+    }
   },
-  "personDescription": {
-    "title": "Person description",
-    "type": "array",
-    "description": "Name of the columns in the Notion database which will be added to the chart bellow the person name",
-    "editor": "stringList",
-    "prefill": ["Role", "Email"]
-}
-  },
-  "required": ["integrationToken", "database", "relationName", "personName"]
+  "required": [
+    "integrationToken",
+    "database",
+    "relationName",
+    "personName"
+  ]
 }
