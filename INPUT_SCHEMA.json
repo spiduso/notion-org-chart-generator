@@ -47,8 +47,8 @@
       "description": "Choose type of charts: Google charts - chart can be too wide for many people, Unformatted Nested List - simple without formatting",
       "editor": "select",
       "default": "googleCharts",
-      "enum": ["googleCharts", "ownUnformatted"],
-      "enumTitles": ["Google Charts", "Unformatted Nested List"]
+      "enum": ["googleCharts", "unformatted", "twoLevel"],
+      "enumTitles": ["Google Charts", "Unformatted Nested List", "Formatted Two Level List"]
     }
   },
   "required": [
