@@ -5,6 +5,8 @@ const { Client } = Notion;
 const { utils: { log } } = Apify;
 const { getContent, getValuesFromDatabase, getRowsFromData, getDatabaseId, checkNamesandLeaders } = require('./helpers');
 const { createContentFromTemplate } = require('./chart-template');
+const { createContentFromTwoLevelTemplate } = require('./two-level-template');
+
 Apify.main(async () => {
     log.info('[CHART]: Getting input.');
     const input = await Apify.getInput();
@@ -38,9 +40,12 @@ Apify.main(async () => {
         content = getContent(readyRows);
         viewPort.deviceScaleFactor = 2;
         viewPort.width = 1;
-    } else if (typeOfChart == 'ownUnformatted') {
-        content = createContentFromTemplate(data, personName, relationName);
-        viewPort.deviceScaleFactor = 3;
+    } else if (typeOfChart == 'unformatted') {
+        content = createContentFromTemplate(data, personName, relationName, personDescription);
+        viewPort.deviceScaleFactor = 2;
+    } else if (typeOfChart == 'twoLevel') {
+        content = createContentFromTwoLevelTemplate(data, personName, relationName, personDescription);
+        viewPort.deviceScaleFactor = 0;
     } else {
         throw new Error('Type of chart is not supported');
     }
@@ -49,17 +54,22 @@ Apify.main(async () => {
     const browser = await Apify.launchPuppeteer();
     const page = await browser.newPage();
 
-    log.info('[CHART]: Setting google charts content.');
+    log.info('[CHART]: Setting chart content.');
     await page.setContent(content, { waitUntil: 'networkidle2' });
-    if (typeOfChart == 'ownUnformatted') {
-        const width = await page.evaluate(() => {
-            return document.getElementsByClassName('content')[0].offsetWidth;
+    if (typeOfChart == 'unformatted') {
+        const firstWidth = await page.evaluate(() => {
+            return document.getElementsByClassName('container')[0].offsetWidth;
         });
-        viewPort.width = width + 50;
+        viewPort.width = firstWidth + 50;
+    } else if (typeOfChart == 'twoLevel') {
+        const firstWidth = await page.evaluate(() => {
+            return document.getElementsByClassName('level-wrapper')[0].offsetWidth;
+        });
+        viewPort.width = firstWidth ;
     }
     await page.setViewport(viewPort);
     log.info('[CHART]: Taking a screenshot.');
-    const screenshot = await page.screenshot({ fullPage: true, omitBackground: true });
+    const screenshot = await page.screenshot({ fullPage: true, omitBackground: true, fullPage: true });
 
     log.info(`[CHART]: Storing a screenshot in default key-value store.`);
     const store = await Apify.openKeyValueStore();
