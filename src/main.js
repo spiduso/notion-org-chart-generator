@@ -16,7 +16,7 @@ Apify.main(async () => {
         relationName,
         personName,
         personDescription,
-        typeOfChart
+        typeOfChart,
     } = input;
 
     const databaseId = getDatabaseId(database);
@@ -33,17 +33,17 @@ Apify.main(async () => {
     data = checkNamesandLeaders(data, personName, relationName);
     let content = '';
     const viewPort = {
-        height: 1
+        height: 1,
     };
-    if (typeOfChart == null || typeOfChart == 'googleCharts') {
+    if (typeOfChart == null || typeOfChart === 'googleCharts') {
         const readyRows = getRowsFromData(data, personName, relationName, personDescription);
         content = getContent(readyRows);
         viewPort.deviceScaleFactor = 2;
         viewPort.width = 1;
-    } else if (typeOfChart == 'unformatted') {
+    } else if (typeOfChart === 'unformatted') {
         content = createContentFromTemplate(data, personName, relationName, personDescription);
         viewPort.deviceScaleFactor = 2;
-    } else if (typeOfChart == 'twoLevel') {
+    } else if (typeOfChart === 'twoLevel') {
         content = createContentFromTwoLevelTemplate(data, personName, relationName, personDescription);
         viewPort.deviceScaleFactor = 0;
     } else {
@@ -56,20 +56,20 @@ Apify.main(async () => {
 
     log.info('[CHART]: Setting chart content.');
     await page.setContent(content, { waitUntil: 'networkidle2' });
-    if (typeOfChart == 'unformatted') {
+    if (typeOfChart === 'unformatted') {
         const firstWidth = await page.evaluate(() => {
             return document.getElementsByClassName('container')[0].offsetWidth;
         });
         viewPort.width = firstWidth + 50;
-    } else if (typeOfChart == 'twoLevel') {
+    } else if (typeOfChart === 'twoLevel') {
         const firstWidth = await page.evaluate(() => {
             return document.getElementsByClassName('level-wrapper')[0].offsetWidth;
         });
-        viewPort.width = firstWidth ;
+        viewPort.width = firstWidth;
     }
     await page.setViewport(viewPort);
     log.info('[CHART]: Taking a screenshot.');
-    const screenshot = await page.screenshot({ fullPage: true, omitBackground: true, fullPage: true });
+    const screenshot = await page.screenshot({ fullPage: true, omitBackground: true });
 
     log.info(`[CHART]: Storing a screenshot in default key-value store.`);
     const store = await Apify.openKeyValueStore();
