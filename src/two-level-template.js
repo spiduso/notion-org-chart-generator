@@ -13,7 +13,7 @@ exports.createContentFromTwoLevelTemplate = (data, personName, relationName,
         const name = data[i][personName];
         const leader = data[i][relationName];
         indexDict[name] = i;
-        if (leader !== '') {
+        if ((typeof leader === 'string' && leader !== '') || (Array.isArray(leader) && leader.length !== 0)) {
             if (!(leader in relationDict)) {
                 const arr = [];
                 arr.push(name);
@@ -25,6 +25,7 @@ exports.createContentFromTwoLevelTemplate = (data, personName, relationName,
             noLeaderArr.push(i);
         }
     }
+
     let content = '<style>*{padding:0;margin:0;}ul{list-style:none;}body{margin:50px 0 100px;text-align:center;font-family:"Inter",sans-serif;}.container{padding:0 10px;margin:0 80px 0 auto;}.rectangle{position:relative;padding:20px;}.sub-level-wrapper{position:relative;width:80%;max-width:500px;margin-left:auto;}.sub-level-wrapper::before{content:"";position:absolute;top:-20px;left:-20px;width:2px;height:calc(100% - 10px);background:black;}.sub-level-wrapper li{margin-top:20px;}.sub-level{font-weight:normal;background:#f27c8d;min-width:95%;}.sub-level::before{content:"";position:absolute;top:50%;left:0;transform:translate(-100%,-50%);width:20px;height:2px;background:black;}.level-wrapper{position:relative;display:grid;grid-template-columns:repeat(3,1fr);}.level-wrapper::after{display:none;content:"";position:absolute;left:-20px;bottom:-20px;width:calc(100% + 20px);height:2px;background:black;}.level{width:70%;margin:0 auto;background:#f5cc7f;}</style><div class="container"><ul class="level-wrapper">';
     for (const noLeadIndex of noLeaderArr) {
         const leader = data[noLeadIndex];
