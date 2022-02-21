@@ -39,7 +39,9 @@ function getContentForPerson(person, data, indexDict, relationDict, personName, 
     let content = `<li>${person[personName]}`;
     if (personDescription) {
         for (const desc of personDescription) {
-            content += `; ${person[desc]}`;
+            if (person[desc]) {
+                content += `; ${person[desc]}`;
+            }
         }
     }
     if (person[personName] in relationDict) {
@@ -96,7 +98,9 @@ function resolveNotFoundLeaders(data, indexDict, relationDict, personName, perso
                 content += `<li>${nameToResolve}`;
                 if (personDescription) {
                     for (const desc of personDescription) {
-                        content += `; ${person[desc]}`;
+                        if (person[desc]) {
+                            content += `; ${person[desc]}`;
+                        }
                     }
                 }
                 if (person[personName] in relationDict) {
