@@ -10,7 +10,7 @@ exports.createContentFromTemplate = (data, personName, relationName, personDescr
         const name = data[i][personName];
         const leader = data[i][relationName];
         indexDict[name] = i;
-        if (leader !== '') {
+        if ((typeof leader === 'string' && leader !== '') || (Array.isArray(leader) && leader.length !== 0)) {
             if (!(leader in relationDict)) {
                 const arr = [];
                 arr.push(name);
