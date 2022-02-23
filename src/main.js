@@ -3,9 +3,10 @@ const Notion = require('@notionhq/client');
 
 const { Client } = Notion;
 const { utils: { log } } = Apify;
-const { getContent, getValuesFromDatabase, getRowsFromData, getDatabaseId, checkNamesandLeaders } = require('./helpers');
-const { createContentFromTemplate } = require('./chart-template');
-const { createContentFromTwoLevelTemplate } = require('./two-level-template');
+const { getValuesFromDatabase, getDatabaseId, checkNamesandLeaders } = require('./helpers');
+const { getContentForGoogleCharts } = require('./chart-types/unformatted-template');
+const { createContentFromTemplate } = require('./chart-types/unformatted-template');
+const { createContentFromTwoLevelTemplate } = require('./chart-types/two-level-template');
 
 Apify.main(async () => {
     log.info('[CHART]: Getting input.');
@@ -36,8 +37,7 @@ Apify.main(async () => {
         height: 1,
     };
     if (typeOfChart == null || typeOfChart === 'googleCharts') {
-        const readyRows = getRowsFromData(data, personName, relationName, personDescription);
-        content = getContent(readyRows);
+        content = getContentForGoogleCharts(data, personName, relationName, personDescription);
         viewPort.deviceScaleFactor = 2;
         viewPort.width = 1;
     } else if (typeOfChart === 'unformatted') {
