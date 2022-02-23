@@ -4,7 +4,7 @@ const Notion = require('@notionhq/client');
 const { Client } = Notion;
 const { utils: { log } } = Apify;
 const { getValuesFromDatabase, getDatabaseId, checkNamesandLeaders } = require('./helpers');
-const { getContentForGoogleCharts } = require('./chart-types/unformatted-template');
+const { getContentForGoogleCharts } = require('./chart-types/google-charts-template');
 const { createContentFromTemplate } = require('./chart-types/unformatted-template');
 const { createContentFromTwoLevelTemplate } = require('./chart-types/two-level-template');
 
