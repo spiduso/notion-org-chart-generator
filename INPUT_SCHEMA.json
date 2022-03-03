@@ -55,6 +55,7 @@
     "integrationToken",
     "database",
     "relationName",
-    "personName"
+    "personName",
+    "typeOfChart"
   ]
 }
