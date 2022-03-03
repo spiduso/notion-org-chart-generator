@@ -43,5 +43,13 @@ Name of the column in the Notion database with name of the people.
 Name of the columns in the Notion database which will be added to the chart bellow the person name.
 <hr>
 
+### Type of chart - ```typeOfChart```
+*Required - Enum*
+Type of chart in which the data will be rendered.
+- Google Charts uses template made by Google. Big charts can get too wide.
+- Unformatted Nested List - Creates unformatted list.
+- Formatted Two Level List - Uses formatted template with two levels. Big charts can result in big image.
+<hr>
+
 ## Results
 Actor stores its result in the default key-value storage with the name `org-chart`, where time is the date and time of actor run.
