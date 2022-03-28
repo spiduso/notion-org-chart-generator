@@ -1,55 +1,28 @@
-# Notion Org Chart Generator
-Actor creates an org chart image based on Notion people directory.
+## What does Notion Org Chart Generator do?
+Notion Org Chart Generator creates an organizational chart image based on a Notion people directory.
 
-## Cost of Usage
-Actor does not use any proxy. Actor use 1CU per 250 runs.
+## Why generate a Notion org chart?
+Generating a Notion organization chart can be very helpful for visualizing the structure of a company and its hierarchy. It can also help your employees understand who they have to respond to. It can be handy for companies that are growing fast and need to keep track of who's who.
 
-## Tutorial
-1) First of all you need a Notion page with a full page database.
-For this tutorial, we will use mockup data located in this link:
+## How much will it cost me to generate a Notion org chart?
+It's extremely cheap to generate org charts using this tool. Even if you want to run it 10 times a day, an [Apify Free plan](https://apify.com/pricing) will be more than sufficient 💪
+
+## How to generate a Notion org chart
+It's easy to generate an organization chart from Notion. Just follow these few steps and you'll get your data in a few minutes.
+
+ 1.  First of all, you need a Notion page with a database. For this tutorial, let's use the example data located in this link:
 ```
 https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a
 ```
-2) On this page - https://www.notion.so/my-integrations - create a new integration and choose correct asscociated workspace, which corresponds to the database.
-3) Go back to the Notion database page and click on `Share`, then `Invite` and under `Select an integration` choose the integration you created in the previous step. Give the integration permission `Can view`.
-4) Now you are all set up! In https://console.apify.com/ create an actor and enter input viz section bellow.
-5) Image of the orgchart is stored in the default key-value storage.
+2.  On the [Notion integrations page](https://www.notion.so/my-integrations) create a new integration. You'll need to be an admin of your workspace!
 
-## Input
-<hr>
+3.  Go back to the Notion database page and click `Share`, then `Invite`, and under `Select an integration` choose the integration you created in the previous step. Give the integration permission `Can view`.
 
-### Integration token - ```integrationToken```
-*Required - String*
-Token of the integration to the Notion database. Token can be found in https://www.notion.so/my-integrations. Token starts with 'secret_'.
-<hr>
+4.  Go to the [actor page on Apify Store](https://apify.com/spidoosho/notion-org-chart-generator) and click on Try for free.
 
-### Database - ```database```
-*Required - String*
-Notion URL to the database or Database ID can be found in the url of the Notion page. For example, for https://www.notion.so/spidoosha/8b374794e9fc490fb0ea98619eb7796a, or just '8b374794e9fc490fb0ea98619eb7796a'.
-<hr>
+5. Enter the integration token, enter the URL or database ID and fill in any other inputs you want. Check the [various inputs](https://apify.com/spidoosho/notion-org-chart-generator/input-schema) for the actor to see what options there are.
 
-### Relation name - ```relationName```
-*Required - String*<br>
-Name of the column in the Notion database with which relations in the orgchart will be made. Column can be type of Person or Text.
-<hr>
+6. Click Run and an image of your org chart will stored in the default key-value storage.
 
-### Person name - ```personName```
-*Required - String* <br>
-Name of the column in the Notion database with name of the people.
-<hr>
-
-### Person description - ```personDescription```
-*Optional - Array*
-Name of the columns in the Notion database which will be added to the chart bellow the person name.
-<hr>
-
-### Type of chart - ```typeOfChart```
-*Required - Enum*
-Type of chart in which the data will be rendered.
-- Google Charts uses template made by Google. Big charts can get too wide.
-- Unformatted Nested List - Creates unformatted list.
-- Formatted Two Level List - Uses formatted template with two levels. Big charts can result in big image.
-<hr>
-
-## Results
-Actor stores its result in the default key-value storage with the name `org-chart`, where time is the date and time of actor run.
+## Notion org chart results
+The actor stores its result in the default key-value storage with the name `org-chart`.
